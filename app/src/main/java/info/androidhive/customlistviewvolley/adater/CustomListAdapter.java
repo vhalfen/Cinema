@@ -1,5 +1,7 @@
 package info.androidhive.customlistviewvolley.adater;
 
+import info.androidhive.customlistviewvolley.FicheFilm;
+import info.androidhive.customlistviewvolley.MainActivity;
 import info.androidhive.customlistviewvolley.R;
 import info.androidhive.customlistviewvolley.app.AppController;
 import info.androidhive.customlistviewvolley.model.Movie;
@@ -8,11 +10,14 @@ import java.util.List;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+
+import android.view.View.OnClickListener;
 
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
@@ -41,6 +46,10 @@ public class CustomListAdapter extends BaseAdapter {
     @Override
     public long getItemId(int position) {
         return position;
+    }
+
+    public CustomListAdapter(Context context) {
+        this.context = context;
     }
 
     @Override
@@ -81,5 +90,7 @@ public class CustomListAdapter extends BaseAdapter {
 
         return convertView;
     }
+
+    private Context context;
 
 }

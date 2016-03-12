@@ -4,18 +4,19 @@ import java.util.ArrayList;
 
 public class Movie {
     private String title, thumbnailUrl;
-    private int year;
+    private String year;
     private double rating;
     private String genre;
     private String duree;
     private String synopsis;
     private String distributeur;
     private String realisateur;
+    private String categorie;
 
     public Movie() {
     }
 
-    public Movie(String name, String thumbnailUrl, int year, double rating,
+    public Movie(String name, String thumbnailUrl, String year, double rating,
                  String genre) {
         this.title = name;
         this.thumbnailUrl = thumbnailUrl;
@@ -40,11 +41,11 @@ public class Movie {
         this.thumbnailUrl = thumbnailUrl;
     }
 
-    public int getYear() {
+    public String getYear() {
         return year;
     }
 
-    public void setYear(int year) {
+    public void setYear(String year) {
         this.year = year;
     }
 
@@ -58,6 +59,10 @@ public class Movie {
 
     public String getGenre() {
         return genre;
+    }
+
+    public String getSynopsis() {
+        return synopsis;
     }
 
     public void setGenre(String genre) {
@@ -82,5 +87,17 @@ public class Movie {
 
     public void setSynopsis(String synopsis) {
         this.synopsis = synopsis;
+    }
+
+    public String getRealisateur() {
+        return realisateur;
+    }
+
+    public void setCategorie(String categorie) {
+        this.categorie = categorie;
+    }
+
+    public String getCategorie() {
+        return categorie;
     }
 }

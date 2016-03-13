@@ -62,6 +62,29 @@ public class MainActivity extends AppCompatActivity {
                 details.putExtra("Realisateur", m.getRealisateur());
                 details.putExtra("Categorie", m.getCategorie());
                 details.putExtra("Genre", m.getGenre());
+
+                JSONArray medias = m.getMedias();
+                ArrayList<String> media_liste = null;
+                JSONObject media_l = null;
+                String media_l_tostring = "";
+
+                for (int l_m = 0; l_m < medias.length(); l_m++) {
+                    try {
+                        media_l = medias.getJSONObject(l_m);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    try {
+                        if (media_l != null) {
+                            media_l_tostring = media_l.getString("path");
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    details.putExtra("Medias" + l_m, media_l_tostring);
+
+                }
+
                 startActivity(details);
             }
         });
@@ -98,7 +121,7 @@ public class MainActivity extends AppCompatActivity {
                                 movie.setDistributeur(obj.getString("distributeur"));
                                 movie.setSynopsis(obj.getString("synopsis"));
                                 movie.setCategorie(obj.getString("categorie"));
-
+                                movie.setMedias(obj.getJSONArray("medias"));
 
 
                                 // adding movie to movies array

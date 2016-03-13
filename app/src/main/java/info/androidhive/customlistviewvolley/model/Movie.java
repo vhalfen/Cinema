@@ -1,5 +1,7 @@
 package info.androidhive.customlistviewvolley.model;
 
+import org.json.JSONArray;
+
 import java.util.ArrayList;
 
 public class Movie {
@@ -12,6 +14,7 @@ public class Movie {
     private String distributeur;
     private String realisateur;
     private String categorie;
+    private JSONArray medias;
 
     public Movie() {
     }
@@ -99,5 +102,13 @@ public class Movie {
 
     public String getCategorie() {
         return categorie;
+    }
+
+    public void setMedias(JSONArray medias) {
+        this.medias = medias;
+    }
+
+    public JSONArray getMedias() {
+        return medias;
     }
 }

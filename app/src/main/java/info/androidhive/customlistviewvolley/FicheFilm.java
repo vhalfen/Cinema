@@ -1,15 +1,33 @@
 package info.androidhive.customlistviewvolley;
 
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.MediaController;
 import android.widget.TextView;
+import android.widget.VideoView;
+
 import com.android.volley.toolbox.ImageLoader;
 
 
 import com.android.volley.toolbox.NetworkImageView;
 
 import org.json.JSONArray;
+import org.w3c.dom.Attr;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.HashMap;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 
 import info.androidhive.customlistviewvolley.app.AppController;
 
@@ -27,6 +45,7 @@ public class FicheFilm extends AppCompatActivity {
         TextView txt6 = (TextView) findViewById(R.id.textViewCategorie);
         TextView txt7 = (TextView) findViewById(R.id.textViewGenre);
 
+
         imageLoader = AppController.getInstance().getImageLoader();
         NetworkImageView thumbNail = (NetworkImageView) findViewById(R.id.thumbnail);
         NetworkImageView media1 = (NetworkImageView) findViewById(R.id.media0);
@@ -36,6 +55,12 @@ public class FicheFilm extends AppCompatActivity {
         NetworkImageView media5 = (NetworkImageView) findViewById(R.id.media4);
         NetworkImageView media6 = (NetworkImageView) findViewById(R.id.media5);
 
+
+        VideoView videoView =(VideoView)findViewById(R.id.videoView);
+        MediaController mediaController= new MediaController(this);
+        mediaController.setAnchorView(videoView);
+        videoView.setMediaController(mediaController);
+        videoView.setVideoURI(Uri.parse("https://www.youtube.com/watch?v=chvki68McG0"));
 
         Bundle extras = getIntent().getExtras();
 
@@ -56,4 +81,6 @@ public class FicheFilm extends AppCompatActivity {
                 media6.setImageUrl(extras.getString("Medias5"), imageLoader);
         }
     }
+
+
 }

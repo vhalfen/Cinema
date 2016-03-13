@@ -23,19 +23,22 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 
+import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
 
-public class MainActivity extends AppCompatActivity {
+public class Prochainement extends AppCompatActivity {
     // Log tag
     private static final String TAG = MainActivity.class.getSimpleName();
 
     // Movies json url
-    private static final String url = "http://centrale.corellis.eu/filmseances.json";
+    private static final String url = "http://centrale.corellis.eu/prochainement.json";
     private ProgressDialog pDialog;
     private List<Movie> movieList = new ArrayList<Movie>();
     private ListView listView;
@@ -54,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent details = new Intent(MainActivity.this, FicheFilm.class);
+                Intent details = new Intent(Prochainement.this, FicheFilm.class);
                 Movie m = movieList.get(position);
                 details.putExtra("Titre", m.getTitle());
                 details.putExtra("Synopsis", m.getSynopsis());
@@ -65,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
                 details.putExtra("Genre", m.getGenre());
 
                 JSONArray medias = m.getMedias();
+                ArrayList<String> media_liste = null;
                 JSONObject media_l = null;
                 String media_l_tostring = "";
 
@@ -96,58 +100,51 @@ public class MainActivity extends AppCompatActivity {
         pDialog.show();
 
         // changing action bar color
-         // getActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#1b1b1b")));
+        // getActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#1b1b1b")));
 
-        // Creating volley request obj
-        JsonArrayRequest movieReq = new JsonArrayRequest(url,
-                new Response.Listener<JSONArray>() {
-                    @Override
-                    public void onResponse(JSONArray response) {
-                        Log.d(TAG, response.toString());
-                        hidePDialog();
+        JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
+                url, null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                Log.d(TAG, response.toString());
+                try {
+                    JSONArray films = response.getJSONArray("films");
 
-                        // Parsing json
-                        for (int i = 0; i < response.length(); i++) {
-                            try {
+                    for (int j = 0; j < films.length(); j++) {
+                        JSONObject film_i = films.getJSONObject(j);
+                        Movie movie = new Movie();
+                        movie.setTitle(film_i.getString("titre"));
+                        movie.setThumbnailUrl(film_i.getString("affiche"));
+                        movie.setDuree(film_i.getString("duree"));
+                        movie.setYear(film_i.getString("annee"));
+                        movie.setGenre(film_i.getString("genre"));
+                        movie.setRealisateur(film_i.getString("realisateur"));
+                        movie.setDistributeur(film_i.getString("distributeur"));
+                        movie.setSynopsis(film_i.getString("synopsis"));
+                        movie.setCategorie(film_i.getString("categorie"));
+                        movie.setMedias(film_i.getJSONArray("medias"));
 
-                                JSONObject obj = response.getJSONObject(i);
-                                Movie movie = new Movie();
-                                movie.setTitle(obj.getString("titre"));
-                                movie.setThumbnailUrl(obj.getString("affiche"));
-                                movie.setDuree(obj.getString("duree"));
-                                movie.setYear(obj.getString("annee"));
-                                movie.setGenre(obj.getString("genre"));
-                                movie.setRealisateur(obj.getString("realisateur"));
-                                movie.setDistributeur(obj.getString("distributeur"));
-                                movie.setSynopsis(obj.getString("synopsis"));
-                                movie.setCategorie(obj.getString("categorie"));
-                                movie.setMedias(obj.getJSONArray("medias"));
-
-
-                                // adding movie to movies array
-                                movieList.add(movie);
-
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-
-                        }
-
-                        // notifying list adapter about data changes
-                        // so that it renders the list view with updated data
-                        adapter.notifyDataSetChanged();
+                        movieList.add(movie);
                     }
-                }, new Response.ErrorListener() {
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                adapter.notifyDataSetChanged();
+            }
+        }, new Response.ErrorListener() {
+
             @Override
             public void onErrorResponse(VolleyError error) {
                 VolleyLog.d(TAG, "Error: " + error.getMessage());
-                hidePDialog();
-
+                Toast.makeText(getApplicationContext(),
+                        error.getMessage(), Toast.LENGTH_SHORT).show();
+                // hide the progress dialog
             }
         });
 
-        // Adding request to request queue
-        AppController.getInstance().addToRequestQueue(movieReq);
+        AppController.getInstance().addToRequestQueue(jsonObjReq);
+
     }
 
     @Override
@@ -166,7 +163,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-          getMenuInflater().inflate(R.menu.main, menu);
+        getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
 
@@ -185,5 +182,6 @@ public class MainActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
+
 
 }

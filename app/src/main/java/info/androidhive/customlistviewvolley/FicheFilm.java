@@ -41,37 +41,19 @@ public class FicheFilm extends AppCompatActivity {
 
         if (extras != null) {
             // Get data via the key
-            String value1 = extras.getString("Titre");
-            String value2 = extras.getString("Synopsis");
-            String value3 = extras.getString("Affiche");
-            String value4 = extras.getString("Date");
-            String value5 = extras.getString("Realisateur");
-            String value6 = extras.getString("Categorie");
-            String value7 = extras.getString("Genre");
-
-            String value8 = extras.getString("Medias0");
-            String value9 = extras.getString("Medias1");
-            String value10 = extras.getString("Medias2");
-            String value11 = extras.getString("Medias3");
-            String value12 = extras.getString("Medias4");
-            String value13 = extras.getString("Medias5");
-
-
-            if (value1 != null) {
-                txt1.setText(value1);
-                txt2.setText(value2);
-                thumbNail.setImageUrl(value3, imageLoader);
-                txt4.setText(value4);
-                txt5.setText(value5);
-                txt6.setText(value6);
-                txt7.setText(value7);
-                media1.setImageUrl(value8, imageLoader);
-                media2.setImageUrl(value9, imageLoader);
-                media3.setImageUrl(value10, imageLoader);
-                media4.setImageUrl(value11, imageLoader);
-                media5.setImageUrl(value12, imageLoader);
-                media6.setImageUrl(value13, imageLoader);
-            }
+                txt1.setText(extras.getString("Titre"));
+                txt2.setText(extras.getString("Synopsis"));
+                thumbNail.setImageUrl(extras.getString("Affiche"), imageLoader);
+                txt4.setText(extras.getString("Date"));
+                txt5.setText(extras.getString("Realisateur"));
+                txt6.setText(extras.getString("Categorie"));
+                txt7.setText(extras.getString("Genre"));
+                media1.setImageUrl(extras.getString("Medias0"), imageLoader);
+                media2.setImageUrl(extras.getString("Medias1"), imageLoader);
+                media3.setImageUrl(extras.getString("Medias2"), imageLoader);
+                media4.setImageUrl(extras.getString("Medias3"), imageLoader);
+                media5.setImageUrl(extras.getString("Medias4"), imageLoader);
+                media6.setImageUrl(extras.getString("Medias5"), imageLoader);
         }
     }
 }

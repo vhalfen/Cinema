@@ -111,4 +111,5 @@ public class Movie {
     public JSONArray getMedias() {
         return medias;
     }
+
 }

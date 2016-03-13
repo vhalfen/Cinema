@@ -4,8 +4,8 @@
         android:title="A l'affiche"/>
     <item android:id="@+id/prochainement"
         android:title="Prochainement"/>
-    <item android:id="@+id/seances"
-        android:title="Evènements"/>
     <item android:id="@+id/events"
+        android:title="Evènements"/>
+    <item android:id="@+id/pref"
         android:title="Préférences"/>
 </menu>

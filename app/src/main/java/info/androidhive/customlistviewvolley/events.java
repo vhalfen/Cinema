@@ -1,7 +1,9 @@
 package info.androidhive.customlistviewvolley;
 
 import info.androidhive.customlistviewvolley.adater.CustomListAdapter;
+import info.androidhive.customlistviewvolley.adater.CustomListAdapter_events;
 import info.androidhive.customlistviewvolley.app.AppController;
+import info.androidhive.customlistviewvolley.model.Event;
 import info.androidhive.customlistviewvolley.model.Movie;
 
 import java.util.ArrayList;
@@ -17,81 +19,76 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.Toast;
 
 
-import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.JsonObjectRequest;
 
-public class Prochainement extends AppCompatActivity {
+public class events extends AppCompatActivity {
     // Log tag
     private static final String TAG = MainActivity.class.getSimpleName();
 
     // Movies json url
-    private static final String url = "http://centrale.corellis.eu/prochainement.json";
+    private static final String url = "http://centrale.corellis.eu/events.json";
     private ProgressDialog pDialog;
-    private List<Movie> movieList = new ArrayList<Movie>();
+    private List<Event> eventList = new ArrayList<Event>();
     private ListView listView;
-    private CustomListAdapter adapter;
+    private CustomListAdapter_events adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_events);
 
         listView = (ListView) findViewById(R.id.list);
-        adapter = new CustomListAdapter(this, movieList);
+        adapter = new CustomListAdapter_events(this, eventList);
         listView.setAdapter(adapter);
+
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent details = new Intent(Prochainement.this, FicheFilm.class);
-                Movie m = movieList.get(position);
-                details.putExtra("Titre", m.getTitle());
-                details.putExtra("Synopsis", m.getSynopsis());
-                details.putExtra("Affiche", m.getThumbnailUrl());
-                details.putExtra("Date", m.getYear());
-                details.putExtra("Realisateur", m.getRealisateur());
-                details.putExtra("Categorie", m.getCategorie());
-                details.putExtra("Genre", m.getGenre());
+                Intent details = new Intent(events.this, FicheEvent.class);
+                Event m = eventList.get(position);
+                details.putExtra("Titre", m.getType());
+                details.putExtra("Date", m.getNombre());
 
-                JSONArray medias = m.getMedias();
-                ArrayList<String> media_liste = null;
-                JSONObject media_l = null;
-                String media_l_tostring = "";
-
-                for (int l_m = 0; l_m < medias.length(); l_m++) {
+                JSONArray events_m = m.getEvents();
+                String events_m_string = "";
+                events_m_string = "";
+                for(int j=0; j < events_m.length(); j++){
+                    JSONObject events_m_o = null;
                     try {
-                        media_l = medias.getJSONObject(l_m);
+                        events_m_o = events_m.getJSONObject(j);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
+                    String varstring = null;
+                    String varstring_titre = null;
                     try {
-                        if (media_l != null) {
-                            media_l_tostring = media_l.getString("path");
-                        }
+                        varstring_titre = events_m_o.getString("titre");
+                        varstring = events_m_o.getString("description");
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                    details.putExtra("Medias" + l_m, media_l_tostring);
-
+                    events_m_string = events_m_string + "\r\n\r\n" + varstring_titre + "\r\n" + varstring;
                 }
+                details.putExtra("Descriptions_events", events_m_string);
 
                 startActivity(details);
             }
         });
-
 
         pDialog = new ProgressDialog(this);
         // Showing progress dialog before making http request
@@ -101,49 +98,43 @@ public class Prochainement extends AppCompatActivity {
         // changing action bar color
         // getActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#1b1b1b")));
 
-        JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
-                url, null, new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                Log.d(TAG, response.toString());
-                try {
-                    JSONArray films = response.getJSONArray("films");
+        // Creating volley request obj
+        JsonArrayRequest movieReq = new JsonArrayRequest(url,
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        Log.d(TAG, response.toString());
+                        hidePDialog();
 
-                    for (int j = 0; j < films.length(); j++) {
-                        JSONObject film_i = films.getJSONObject(j);
-                        Movie movie = new Movie();
-                        movie.setTitle(film_i.getString("titre"));
-                        movie.setThumbnailUrl(film_i.getString("affiche"));
-                        movie.setDuree(film_i.getString("duree"));
-                        movie.setYear(film_i.getString("annee"));
-                        movie.setGenre(film_i.getString("genre"));
-                        movie.setRealisateur(film_i.getString("realisateur"));
-                        movie.setDistributeur(film_i.getString("distributeur"));
-                        movie.setSynopsis(film_i.getString("synopsis"));
-                        movie.setCategorie(film_i.getString("categorie"));
-                        movie.setMedias(film_i.getJSONArray("medias"));
-
-                        movieList.add(movie);
+                        // Parsing json
+                        for (int i = 0; i < response.length(); i++) {
+                            try {
+                                JSONObject obj = response.getJSONObject(i);
+                                Event event = new Event();
+                                event.setType(obj.getString("type"));
+                                JSONArray event_par_type = obj.getJSONArray("events");
+                                event.setNombre(event_par_type.length());
+                                event.setEvents(event_par_type);
+                                // adding movie to movies array
+                                eventList.add(event);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        // notifying list adapter about data changes
+                        // so that it renders the list view with updated data
+                        adapter.notifyDataSetChanged();
                     }
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                adapter.notifyDataSetChanged();
-            }
-        }, new Response.ErrorListener() {
-
+                }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 VolleyLog.d(TAG, "Error: " + error.getMessage());
-                Toast.makeText(getApplicationContext(),
-                        error.getMessage(), Toast.LENGTH_SHORT).show();
-                // hide the progress dialog
+                hidePDialog();
             }
         });
 
-        AppController.getInstance().addToRequestQueue(jsonObjReq);
-
+        // Adding request to request queue
+        AppController.getInstance().addToRequestQueue(movieReq);
     }
 
     @Override
@@ -185,6 +176,5 @@ public class Prochainement extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
-
 
 }

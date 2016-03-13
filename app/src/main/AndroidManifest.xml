@@ -30,7 +30,10 @@
             </intent-filter>
         </activity>
         <activity android:name=".FicheFilm" />
-        <activity android:name=".Prochainement"></activity>
+        <activity android:name=".Prochainement" />
+        <activity
+            android:name=".events"/>
+        <activity android:name=".FicheEvent"></activity>
     </application>
 
 </manifest>

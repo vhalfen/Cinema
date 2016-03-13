@@ -2,6 +2,7 @@ package info.androidhive.customlistviewvolley.adater;
 
 import info.androidhive.customlistviewvolley.R;
 import info.androidhive.customlistviewvolley.app.AppController;
+import info.androidhive.customlistviewvolley.model.Event;
 import info.androidhive.customlistviewvolley.model.Movie;
 
 import java.util.ArrayList;
@@ -20,27 +21,29 @@ import android.widget.TextView;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 
-public class CustomListAdapter extends BaseAdapter {
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+public class CustomListAdapter_events extends BaseAdapter {
     private Activity activity;
     private LayoutInflater inflater;
-    private List<Movie> movieItems;
-    private List<Movie> filteredMovies;
+    private List<Event> eventItems;
     ImageLoader imageLoader = AppController.getInstance().getImageLoader();
 
-    public CustomListAdapter(Activity activity, List<Movie> movieItems) {
+    public CustomListAdapter_events(Activity activity, List<Event> eventItems) {
         this.activity = activity;
-        this.movieItems = movieItems;
-        this.filteredMovies = movieItems;
+        this.eventItems = eventItems;;
     }
 
     @Override
     public int getCount() {
-        return movieItems.size();
+        return eventItems.size();
     }
 
     @Override
     public Object getItem(int location) {
-        return movieItems.get(location);
+        return eventItems.get(location);
     }
 
     @Override
@@ -48,7 +51,7 @@ public class CustomListAdapter extends BaseAdapter {
         return position;
     }
 
-    public CustomListAdapter(Context context) {
+    public CustomListAdapter_events(Context context) {
         this.context = context;
     }
 
@@ -71,22 +74,43 @@ public class CustomListAdapter extends BaseAdapter {
         TextView year = (TextView) convertView.findViewById(R.id.releaseYear);
 
         // getting movie data for the row
-        Movie m = movieItems.get(position);
+        Event m = eventItems.get(position);
 
         // thumbnail image
-        thumbNail.setImageUrl(m.getThumbnailUrl(), imageLoader);
+        //thumbNail.setImageUrl(m.getThumbnailUrl(), imageLoader);
 
         // title
-        title.setText(m.getTitle());
+        title.setText(m.getType());
 
         // duree
-        duree.setText(String.valueOf(m.getDuree()) + " minutes");
+        duree.setText(String.valueOf(m.getNombre()) + " soirée(s) organisée(s).");
 
         // genre
-        genre.setText(String.valueOf(m.getGenre()));
+        //genre.setText(String.valueOf(m.getGenre()));
+
+        JSONArray events_m = m.getEvents();
+        String events_m_string = "";
+            for(int j=0; j < events_m.length(); j++){
+                JSONObject events_m_o = null;
+                try {
+                    events_m_o = events_m.getJSONObject(j);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                String varstring = null;
+                try {
+                    varstring = events_m_o.getString("titre");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                events_m_string = events_m_string + " - " + varstring;
+            }
+
+        genre.setText(events_m_string);
+
 
         // release year
-        year.setText(String.valueOf(m.getYear()));
+        //year.setText(String.valueOf(m.getYear()));
 
 
 

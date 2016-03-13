@@ -17,11 +17,14 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.ListView;
 
 
@@ -146,6 +149,29 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         // Adding request to request queue
         AppController.getInstance().addToRequestQueue(movieReq);
     }
@@ -181,9 +207,16 @@ public class MainActivity extends AppCompatActivity {
                 Intent prochainementActivity = new Intent(this,Prochainement.class);
                 startActivity(prochainementActivity);
                 return true;
+            case R.id.events:
+                Intent eventActivity = new Intent(this, events.class);
+                startActivity(eventActivity);
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
+
+
+
 
 }

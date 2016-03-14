@@ -170,33 +170,7 @@
 
                 </LinearLayout>
             </HorizontalScrollView>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Videos"
-                android:id="@+id/Galerie"
-                android:layout_marginTop="20dp"
-                android:textStyle="bold"/>
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
 
-
-                <VideoView
-                    android:id="@+id/videoView"
-                    android:layout_width="166dp"
-                    android:layout_height="100dp"
-                    android:layout_alignParentTop="true"
-                    android:layout_alignParentStart="true" />
-
-                <WebView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/webView"
-                    android:layout_alignParentTop="true"
-                    android:layout_toEndOf="@+id/videoView" />
-
-            </RelativeLayout>
         </LinearLayout>
     </ScrollView>
 

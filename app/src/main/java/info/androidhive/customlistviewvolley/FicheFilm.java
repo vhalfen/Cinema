@@ -56,14 +56,8 @@ public class FicheFilm extends AppCompatActivity {
         NetworkImageView media6 = (NetworkImageView) findViewById(R.id.media5);
 
 
-        VideoView videoView =(VideoView)findViewById(R.id.videoView);
-        MediaController mediaController= new MediaController(this);
-        mediaController.setAnchorView(videoView);
-        videoView.setMediaController(mediaController);
-        videoView.setVideoURI(Uri.parse("https://www.youtube.com/watch?v=chvki68McG0"));
 
         Bundle extras = getIntent().getExtras();
-
         if (extras != null) {
             // Get data via the key
                 txt1.setText(extras.getString("Titre"));
